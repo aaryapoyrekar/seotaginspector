@@ -10,12 +10,17 @@ interface URLAnalysisFormProps {
 }
 
 export default function URLAnalysisForm({ onAnalyze, isLoading }: URLAnalysisFormProps) {
-  const [url, setUrl] = useState("");
+  const [domain, setDomain] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (url.trim()) {
-      onAnalyze(url.trim());
+    if (domain.trim()) {
+      // Automatically prepend https:// if not already present
+      let fullUrl = domain.trim();
+      if (!fullUrl.startsWith('http://') && !fullUrl.startsWith('https://')) {
+        fullUrl = 'https://' + fullUrl;
+      }
+      onAnalyze(fullUrl);
     }
   };
 
@@ -23,25 +28,29 @@ export default function URLAnalysisForm({ onAnalyze, isLoading }: URLAnalysisFor
     <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
       <div className="flex-1">
         <Label htmlFor="website-url" className="block text-sm font-medium text-slate-700 mb-2">
-          Website URL
+          Website Domain
         </Label>
         <div className="relative">
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 text-sm font-medium">
+            https://
+          </div>
           <Input
-            type="url"
+            type="text"
             id="website-url"
-            placeholder="https://example.com"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="pr-12 h-11"
+            placeholder="example.com"
+            value={domain}
+            onChange={(e) => setDomain(e.target.value)}
+            className="pl-20 pr-12 h-11"
             required
           />
           <Globe className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400" size={16} />
         </div>
+        <p className="text-xs text-slate-500 mt-1">Just enter the domain name - we'll add https:// automatically</p>
       </div>
       <div className="flex items-end">
         <Button 
           type="submit"
-          disabled={isLoading || !url.trim()}
+          disabled={isLoading || !domain.trim()}
           className="bg-blue-600 hover:bg-blue-700 px-6 sm:px-8 py-3 h-11 w-full sm:w-auto"
         >
           {isLoading ? (
