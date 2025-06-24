@@ -32,7 +32,7 @@ export default function URLAnalysisForm({ onAnalyze, isLoading }: URLAnalysisFor
             placeholder="https://example.com"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="pr-12"
+            className="pr-12 h-11"
             required
           />
           <Globe className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400" size={16} />
@@ -42,14 +42,14 @@ export default function URLAnalysisForm({ onAnalyze, isLoading }: URLAnalysisFor
         <Button 
           type="submit"
           disabled={isLoading || !url.trim()}
-          className="bg-blue-600 hover:bg-blue-700 px-8 py-3"
+          className="bg-blue-600 hover:bg-blue-700 px-6 sm:px-8 py-3 h-11 w-full sm:w-auto"
         >
           {isLoading ? (
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
           ) : (
             <Search className="mr-2" size={16} />
           )}
-          Analyze SEO
+          <span className="text-sm sm:text-base">Analyze SEO</span>
         </Button>
       </div>
     </form>

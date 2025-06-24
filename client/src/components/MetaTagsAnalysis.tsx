@@ -120,26 +120,28 @@ export default function MetaTagsAnalysis({ metaTags }: MetaTagsAnalysisProps) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="p-6 border-b border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-900 flex items-center">
-          <Code className="text-blue-600 mr-3" size={20} />
+      <div className="p-4 sm:p-6 border-b border-slate-200">
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900 flex items-center">
+          <Code className="text-blue-600 mr-3" size={18} />
           Meta Tags Analysis
         </h3>
       </div>
-      <div className="p-6">
-        <div className="space-y-4">
+      <div className="p-4 sm:p-6">
+        <div className="space-y-3 sm:space-y-4">
           {[...tags, ogAnalysis].map((tag, index) => (
-            <div key={index} className={`p-4 rounded-lg border ${getStatusBg(tag.status)}`}>
+            <div key={index} className={`p-3 sm:p-4 rounded-lg border ${getStatusBg(tag.status)}`}>
               <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-2">
-                  {getStatusIcon(tag.status)}
-                  <span className="font-medium text-slate-900">{tag.name}</span>
-                  <span className={`text-sm px-2 py-1 rounded ${getStatusBadge(tag.status)}`}>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-2">
+                  <div className="flex items-center space-x-2 mb-1 sm:mb-0">
+                    {getStatusIcon(tag.status)}
+                    <span className="font-medium text-slate-900 text-sm sm:text-base">{tag.name}</span>
+                  </div>
+                  <span className={`text-xs px-2 py-1 rounded ${getStatusBadge(tag.status)} self-start`}>
                     {tag.status === 'good' ? 'Good' : tag.status === 'warning' ? 'Warning' : 'Missing'}
                   </span>
                 </div>
                 {tag.value && (
-                  <p className="text-sm text-slate-600 mb-2 break-words">{tag.value}</p>
+                  <p className="text-xs sm:text-sm text-slate-600 mb-2 break-words">{tag.value}</p>
                 )}
                 <p className="text-xs text-slate-500">{tag.message}</p>
                 {tag.recommendation && (
@@ -151,13 +153,13 @@ export default function MetaTagsAnalysis({ metaTags }: MetaTagsAnalysisProps) {
 
           {/* Detailed Open Graph breakdown */}
           {ogTagsPresent > 0 && (
-            <div className={`p-4 rounded-lg border ${getStatusBg(ogAnalysis.status)}`}>
+            <div className={`p-3 sm:p-4 rounded-lg border ${getStatusBg(ogAnalysis.status)}`}>
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
                   {getStatusIcon(ogAnalysis.status)}
-                  <span className="font-medium text-slate-900">Open Graph Details</span>
+                  <span className="font-medium text-slate-900 text-sm sm:text-base">Open Graph Details</span>
                 </div>
-                <div className="space-y-1 text-xs text-slate-600">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
                   <div className="flex justify-between">
                     <span>og:title</span>
                     {metaTags.ogTitle ? <CheckCircle className="text-green-600" size={12} /> : <XCircle className="text-red-600" size={12} />}
@@ -174,7 +176,7 @@ export default function MetaTagsAnalysis({ metaTags }: MetaTagsAnalysisProps) {
                     <span>og:url</span>
                     {metaTags.ogUrl ? <CheckCircle className="text-green-600" size={12} /> : <XCircle className="text-red-600" size={12} />}
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between sm:col-span-2">
                     <span>og:type</span>
                     {metaTags.ogType ? <CheckCircle className="text-green-600" size={12} /> : <XCircle className="text-red-600" size={12} />}
                   </div>

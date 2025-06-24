@@ -58,25 +58,25 @@ export default function SEORecommendations({ recommendations }: SEORecommendatio
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="p-6 border-b border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-900 flex items-center">
-          <Lightbulb className="text-amber-600 mr-3" size={20} />
+      <div className="p-4 sm:p-6 border-b border-slate-200">
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900 flex items-center">
+          <Lightbulb className="text-amber-600 mr-3" size={18} />
           SEO Recommendations
         </h3>
       </div>
-      <div className="p-6">
-        <div className="space-y-4">
+      <div className="p-4 sm:p-6">
+        <div className="space-y-3 sm:space-y-4">
           {recommendations.map((recommendation, index) => (
-            <div key={index} className="flex items-start space-x-3 p-4 bg-slate-50 rounded-lg">
+            <div key={index} className="flex items-start space-x-3 p-3 sm:p-4 bg-slate-50 rounded-lg">
               <div className={`w-6 h-6 ${
                 recommendation.type === 'error' ? 'bg-red-100' : 
                 recommendation.type === 'warning' ? 'bg-amber-100' : 'bg-green-100'
               } rounded-full flex items-center justify-center flex-shrink-0 mt-0.5`}>
                 {getRecommendationIcon(recommendation.type)}
               </div>
-              <div className="flex-1">
-                <h4 className="font-medium text-slate-900 mb-1">{recommendation.title}</h4>
-                <p className="text-sm text-slate-600 mb-2">{recommendation.description}</p>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-medium text-slate-900 mb-1 text-sm sm:text-base">{recommendation.title}</h4>
+                <p className="text-xs sm:text-sm text-slate-600 mb-2">{recommendation.description}</p>
                 <span className={`text-xs px-2 py-1 rounded ${getPriorityBadge(recommendation.priority)}`}>
                   {getPriorityText(recommendation.priority)}
                 </span>

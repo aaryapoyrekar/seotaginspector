@@ -38,36 +38,36 @@ export default function QuickActions({ onExportReport, hasResults }: QuickAction
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="p-6 border-b border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-900">Quick Actions</h3>
+      <div className="p-4 sm:p-6 border-b border-slate-200">
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900">Quick Actions</h3>
       </div>
-      <div className="p-6 space-y-3">
+      <div className="p-4 sm:p-6 space-y-3">
         <Button 
           onClick={onExportReport}
           disabled={!hasResults}
-          className="w-full bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200"
+          className="w-full bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200 text-sm"
           variant="outline"
         >
-          <FileText className="mr-2" size={16} />
+          <FileText className="mr-2" size={14} />
           Export PDF Report
         </Button>
         
         <Button 
           onClick={handleScheduleCheck}
-          className="w-full bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
+          className="w-full bg-green-50 text-green-700 hover:bg-green-100 border-green-200 text-sm"
           variant="outline"
         >
-          <Clock className="mr-2" size={16} />
+          <Clock className="mr-2" size={14} />
           Schedule Monitoring
         </Button>
         
         <Button 
           onClick={handleShareResults}
           disabled={!hasResults}
-          className="w-full bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-200"
+          className="w-full bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-200 text-sm"
           variant="outline"
         >
-          <Share2 className="mr-2" size={16} />
+          <Share2 className="mr-2" size={14} />
           Share Results
         </Button>
       </div>

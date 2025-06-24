@@ -86,25 +86,27 @@ ${analysisResult.recommendations.map(rec => `- ${rec.title}: ${rec.description}`
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Search className="text-white" size={20} />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Search className="text-white" size={18} />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-900">SEO Analyzer</h1>
-                <p className="text-sm text-slate-500">Meta Tag Analysis Tool</p>
+                <h1 className="text-lg sm:text-xl font-bold text-slate-900">SEO Analyzer</h1>
+                <p className="text-xs sm:text-sm text-slate-500 hidden sm:block">Meta Tag Analysis Tool</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <Button variant="ghost" size="sm" className="hidden sm:flex">
                 <HelpCircle size={18} />
               </Button>
               <Button 
                 onClick={handleExportReport}
                 disabled={!analysisResult}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm px-3 sm:px-4"
+                size="sm"
               >
-                <Download className="mr-2" size={16} />
-                Export Report
+                <Download className="mr-1 sm:mr-2" size={14} />
+                <span className="hidden sm:inline">Export Report</span>
+                <span className="sm:hidden">Export</span>
               </Button>
             </div>
           </div>
@@ -112,10 +114,10 @@ ${analysisResult.recommendations.map(rec => `- ${rec.title}: ${rec.description}`
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* URL Input Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
             <h2 className="text-lg font-semibold text-slate-900">Website Analysis</h2>
             <div className="flex items-center space-x-2 text-sm text-slate-500">
               <Shield className="text-green-500" size={16} />
@@ -138,15 +140,15 @@ ${analysisResult.recommendations.map(rec => `- ${rec.title}: ${rec.description}`
               recommendations={analysisResult.recommendations}
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               {/* Left Column - Meta Tags Analysis */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                 <MetaTagsAnalysis metaTags={analysisResult.metaTags} />
                 <SEORecommendations recommendations={analysisResult.recommendations} />
               </div>
 
               {/* Right Column - Previews */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <GoogleSearchPreview 
                   url={analysisResult.url}
                   title={analysisResult.metaTags.title}
@@ -165,13 +167,13 @@ ${analysisResult.recommendations.map(rec => `- ${rec.title}: ${rec.description}`
 
       {/* Loading Overlay */}
       {analyzeMutation.isPending && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 max-w-sm mx-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 sm:p-8 max-w-sm w-full mx-4">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600"></div>
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Analyzing Website</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-2">Analyzing Website</h3>
               <p className="text-sm text-slate-600">Fetching and analyzing SEO data...</p>
               <div className="mt-4">
                 <div className="w-full bg-slate-200 rounded-full h-2">
