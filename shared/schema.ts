@@ -61,6 +61,32 @@ export interface SEOScore {
   metaTags: number;
   socialTags: number;
   performance: string;
+  categories: {
+    basicSEO: {
+      score: number;
+      maxScore: number;
+      status: 'excellent' | 'good' | 'needs-work' | 'critical';
+      summary: string;
+    };
+    socialSEO: {
+      score: number;
+      maxScore: number;
+      status: 'excellent' | 'good' | 'needs-work' | 'critical';
+      summary: string;
+    };
+    technicalSEO: {
+      score: number;
+      maxScore: number;
+      status: 'excellent' | 'good' | 'needs-work' | 'critical';
+      summary: string;
+    };
+    contentOptimization: {
+      score: number;
+      maxScore: number;
+      status: 'excellent' | 'good' | 'needs-work' | 'critical';
+      summary: string;
+    };
+  };
 }
 
 export interface SEORecommendation {

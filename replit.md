@@ -91,3 +91,4 @@ Preferred communication style: Simple, everyday language.
 
 Changelog:
 - June 24, 2025. Initial setup
+- June 24, 2025. Enhanced visual design with category summaries and beginner-friendly interface

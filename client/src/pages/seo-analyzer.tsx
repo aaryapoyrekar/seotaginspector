@@ -4,6 +4,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { SEOAnalysisResult } from "@shared/schema";
 import URLAnalysisForm from "@/components/URLAnalysisForm";
 import SEOScoreDashboard from "@/components/SEOScoreDashboard";
+import CategoryScoreCards from "@/components/CategoryScoreCards";
+import VisualSummaryCards from "@/components/VisualSummaryCards";
 import MetaTagsAnalysis from "@/components/MetaTagsAnalysis";
 import SEORecommendations from "@/components/SEORecommendations";
 import GoogleSearchPreview from "@/components/GoogleSearchPreview";
@@ -139,6 +141,12 @@ ${analysisResult.recommendations.map(rec => `- ${rec.title}: ${rec.description}`
               loadTime={analysisResult.loadTime}
               recommendations={analysisResult.recommendations}
             />
+
+            {/* Visual Summary Cards - At-a-glance view */}
+            <VisualSummaryCards analysisResult={analysisResult} />
+
+            {/* Category Score Cards */}
+            <CategoryScoreCards score={analysisResult.score} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               {/* Left Column - Meta Tags Analysis */}

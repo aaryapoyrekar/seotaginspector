@@ -121,66 +121,93 @@ export default function MetaTagsAnalysis({ metaTags }: MetaTagsAnalysisProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200">
       <div className="p-4 sm:p-6 border-b border-slate-200">
-        <h3 className="text-base sm:text-lg font-semibold text-slate-900 flex items-center">
-          <Code className="text-blue-600 mr-3" size={18} />
-          Meta Tags Analysis
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-base sm:text-lg font-semibold text-slate-900 flex items-center">
+            <Code className="text-blue-600 mr-3" size={18} />
+            Detailed Analysis
+          </h3>
+          <div className="text-xs text-slate-500">
+            {tags.filter(t => t.status === 'good').length + (ogAnalysis.status === 'good' ? 1 : 0)}/{tags.length + 1} optimized
+          </div>
+        </div>
+        <p className="text-sm text-slate-600 mt-2">Breakdown of individual SEO elements and their optimization status</p>
       </div>
       <div className="p-4 sm:p-6">
         <div className="space-y-3 sm:space-y-4">
           {[...tags, ogAnalysis].map((tag, index) => (
-            <div key={index} className={`p-3 sm:p-4 rounded-lg border ${getStatusBg(tag.status)}`}>
+            <div key={index} className={`p-4 rounded-lg border-2 ${getStatusBg(tag.status)} hover:shadow-md transition-shadow duration-200`}>
               <div className="flex-1">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-2">
-                  <div className="flex items-center space-x-2 mb-1 sm:mb-0">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
+                  <div className="flex items-center space-x-2 mb-2 sm:mb-0">
                     {getStatusIcon(tag.status)}
-                    <span className="font-medium text-slate-900 text-sm sm:text-base">{tag.name}</span>
+                    <span className="font-semibold text-slate-900 text-sm sm:text-base">{tag.name}</span>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded ${getStatusBadge(tag.status)} self-start`}>
-                    {tag.status === 'good' ? 'Good' : tag.status === 'warning' ? 'Warning' : 'Missing'}
+                  <span className={`text-xs px-3 py-1 rounded-full font-medium ${getStatusBadge(tag.status)} self-start`}>
+                    {tag.status === 'good' ? '✓ Optimized' : tag.status === 'warning' ? '⚠ Needs Work' : '✗ Missing'}
                   </span>
                 </div>
+                
                 {tag.value && (
-                  <p className="text-xs sm:text-sm text-slate-600 mb-2 break-words">{tag.value}</p>
+                  <div className="mb-3">
+                    <p className="text-xs text-slate-500 uppercase tracking-wide font-medium mb-1">Current Value:</p>
+                    <p className="text-sm text-slate-700 bg-slate-50 p-2 rounded border-l-4 border-blue-200 break-words">
+                      {tag.value}
+                    </p>
+                  </div>
                 )}
-                <p className="text-xs text-slate-500">{tag.message}</p>
-                {tag.recommendation && (
-                  <p className="text-xs text-slate-500 mt-1">Recommendation: {tag.recommendation}</p>
-                )}
+                
+                <div className="space-y-2">
+                  <p className="text-sm text-slate-600 font-medium">{tag.message}</p>
+                  {tag.recommendation && (
+                    <div className="bg-blue-50 p-3 rounded-md border border-blue-200">
+                      <p className="text-xs text-blue-800">
+                        <strong>💡 Recommendation:</strong> {tag.recommendation}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))}
 
-          {/* Detailed Open Graph breakdown */}
+          {/* Enhanced Open Graph breakdown */}
           {ogTagsPresent > 0 && (
-            <div className={`p-3 sm:p-4 rounded-lg border ${getStatusBg(ogAnalysis.status)}`}>
+            <div className={`p-4 rounded-lg border-2 ${getStatusBg(ogAnalysis.status)} hover:shadow-md transition-shadow duration-200`}>
               <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-2">
+                <div className="flex items-center space-x-2 mb-3">
                   {getStatusIcon(ogAnalysis.status)}
-                  <span className="font-medium text-slate-900 text-sm sm:text-base">Open Graph Details</span>
+                  <span className="font-semibold text-slate-900 text-sm sm:text-base">Social Media Tags Breakdown</span>
+                  <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">{ogTagsPresent}/5 Present</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
-                  <div className="flex justify-between">
-                    <span>og:title</span>
-                    {metaTags.ogTitle ? <CheckCircle className="text-green-600" size={12} /> : <XCircle className="text-red-600" size={12} />}
-                  </div>
-                  <div className="flex justify-between">
-                    <span>og:description</span>
-                    {metaTags.ogDescription ? <CheckCircle className="text-green-600" size={12} /> : <XCircle className="text-red-600" size={12} />}
-                  </div>
-                  <div className="flex justify-between">
-                    <span>og:image</span>
-                    {metaTags.ogImage ? <CheckCircle className="text-green-600" size={12} /> : <XCircle className="text-red-600" size={12} />}
-                  </div>
-                  <div className="flex justify-between">
-                    <span>og:url</span>
-                    {metaTags.ogUrl ? <CheckCircle className="text-green-600" size={12} /> : <XCircle className="text-red-600" size={12} />}
-                  </div>
-                  <div className="flex justify-between sm:col-span-2">
-                    <span>og:type</span>
-                    {metaTags.ogType ? <CheckCircle className="text-green-600" size={12} /> : <XCircle className="text-red-600" size={12} />}
-                  </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    { key: 'ogTitle', label: 'og:title', description: 'Title for social shares' },
+                    { key: 'ogDescription', label: 'og:description', description: 'Description for social shares' },
+                    { key: 'ogImage', label: 'og:image', description: 'Image for social shares' },
+                    { key: 'ogUrl', label: 'og:url', description: 'Canonical URL for sharing' },
+                    { key: 'ogType', label: 'og:type', description: 'Content type (article, website, etc.)' }
+                  ].map((item, idx) => {
+                    const isPresent = metaTags[item.key as keyof MetaTags];
+                    return (
+                      <div key={idx} className={`p-3 rounded-md border ${isPresent ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium text-slate-900">{item.label}</span>
+                          {isPresent ? <CheckCircle className="text-green-600" size={16} /> : <XCircle className="text-red-600" size={16} />}
+                        </div>
+                        <p className="text-xs text-slate-600">{item.description}</p>
+                      </div>
+                    );
+                  })}
                 </div>
+                
+                {ogTagsPresent < 4 && (
+                  <div className="mt-3 bg-amber-50 p-3 rounded-md border border-amber-200">
+                    <p className="text-xs text-amber-800">
+                      <strong>📱 Social Media Impact:</strong> Missing tags will result in poor preview appearance when shared on Facebook, Twitter, and LinkedIn.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}

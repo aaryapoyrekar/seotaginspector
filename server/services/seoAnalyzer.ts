@@ -109,38 +109,149 @@ export class SEOAnalyzer {
     const maxMetaTags = 15;
     const maxSocialTags = 12;
 
-    // Essential meta tags scoring
-    if (metaTags.title) metaTagsScore += 3;
-    if (metaTags.description) metaTagsScore += 3;
-    if (metaTags.keywords) metaTagsScore += 1;
-    if (metaTags.canonical) metaTagsScore += 2;
-    if (metaTags.viewport) metaTagsScore += 2;
-    if (metaTags.robots) metaTagsScore += 1;
-
-    // Title optimization
+    // Basic SEO Category Scoring
+    let basicSEOScore = 0;
+    const maxBasicSEO = 10;
+    
     if (metaTags.title) {
+      basicSEOScore += 3;
+      metaTagsScore += 3;
       const titleLength = metaTags.title.length;
-      if (titleLength >= 50 && titleLength <= 60) metaTagsScore += 2;
-      else if (titleLength >= 30 && titleLength <= 70) metaTagsScore += 1;
+      if (titleLength >= 50 && titleLength <= 60) {
+        basicSEOScore += 1;
+        metaTagsScore += 2;
+      } else if (titleLength >= 30 && titleLength <= 70) {
+        metaTagsScore += 1;
+      }
     }
-
-    // Description optimization
+    
     if (metaTags.description) {
+      basicSEOScore += 3;
+      metaTagsScore += 3;
       const descLength = metaTags.description.length;
-      if (descLength >= 150 && descLength <= 160) metaTagsScore += 1;
+      if (descLength >= 150 && descLength <= 160) {
+        basicSEOScore += 1;
+        metaTagsScore += 1;
+      }
+    }
+    
+    if (metaTags.keywords) {
+      basicSEOScore += 1;
+      metaTagsScore += 1;
     }
 
-    // Open Graph tags scoring
-    if (metaTags.ogTitle) socialTagsScore += 2;
-    if (metaTags.ogDescription) socialTagsScore += 2;
-    if (metaTags.ogImage) socialTagsScore += 3;
-    if (metaTags.ogUrl) socialTagsScore += 1;
-    if (metaTags.ogType) socialTagsScore += 1;
+    // Technical SEO Category Scoring
+    let technicalSEOScore = 0;
+    const maxTechnicalSEO = 6;
+    
+    if (metaTags.canonical) {
+      technicalSEOScore += 2;
+      metaTagsScore += 2;
+    }
+    if (metaTags.viewport) {
+      technicalSEOScore += 2;
+      metaTagsScore += 2;
+    }
+    if (metaTags.robots) {
+      technicalSEOScore += 2;
+      metaTagsScore += 1;
+    }
 
-    // Twitter Card tags scoring
-    if (metaTags.twitterCard) socialTagsScore += 1;
-    if (metaTags.twitterTitle) socialTagsScore += 1;
-    if (metaTags.twitterDescription) socialTagsScore += 1;
+    // Social SEO Category Scoring
+    let socialSEOScore = 0;
+    const maxSocialSEO = 12;
+    
+    if (metaTags.ogTitle) {
+      socialSEOScore += 2;
+      socialTagsScore += 2;
+    }
+    if (metaTags.ogDescription) {
+      socialSEOScore += 2;
+      socialTagsScore += 2;
+    }
+    if (metaTags.ogImage) {
+      socialSEOScore += 3;
+      socialTagsScore += 3;
+    }
+    if (metaTags.ogUrl) {
+      socialSEOScore += 1;
+      socialTagsScore += 1;
+    }
+    if (metaTags.ogType) {
+      socialSEOScore += 1;
+      socialTagsScore += 1;
+    }
+    if (metaTags.twitterCard) {
+      socialSEOScore += 1;
+      socialTagsScore += 1;
+    }
+    if (metaTags.twitterTitle) {
+      socialSEOScore += 1;
+      socialTagsScore += 1;
+    }
+    if (metaTags.twitterDescription) {
+      socialSEOScore += 1;
+      socialTagsScore += 1;
+    }
+
+    // Content Optimization Category
+    let contentOptScore = 0;
+    const maxContentOpt = 8;
+    
+    if (metaTags.title && metaTags.title.length >= 30 && metaTags.title.length <= 70) {
+      contentOptScore += 3;
+    }
+    if (metaTags.description && metaTags.description.length >= 120 && metaTags.description.length <= 160) {
+      contentOptScore += 3;
+    }
+    if (metaTags.ogTitle && metaTags.title && metaTags.ogTitle !== metaTags.title) {
+      contentOptScore += 1;
+    }
+    if (metaTags.ogDescription && metaTags.description && metaTags.ogDescription !== metaTags.description) {
+      contentOptScore += 1;
+    }
+
+    const getStatus = (score: number, maxScore: number) => {
+      const percentage = (score / maxScore) * 100;
+      if (percentage >= 90) return 'excellent';
+      if (percentage >= 70) return 'good';
+      if (percentage >= 40) return 'needs-work';
+      return 'critical';
+    };
+
+    const getSummary = (category: string, score: number, maxScore: number) => {
+      const percentage = Math.round((score / maxScore) * 100);
+      const status = getStatus(score, maxScore);
+      
+      switch (category) {
+        case 'basic':
+          if (status === 'excellent') return `Your page has excellent basic SEO foundation with ${percentage}% completion`;
+          if (status === 'good') return `Good basic SEO setup, but ${100-percentage}% needs attention`;
+          if (status === 'needs-work') return `Basic SEO needs significant improvement (${percentage}% complete)`;
+          return `Critical: Basic SEO elements are mostly missing (${percentage}% complete)`;
+          
+        case 'social':
+          if (status === 'excellent') return `Excellent social media optimization (${percentage}% complete)`;
+          if (status === 'good') return `Good social sharing setup, minor improvements possible`;
+          if (status === 'needs-work') return `Social sharing could be significantly improved`;
+          return `Critical: Missing essential social media tags`;
+          
+        case 'technical':
+          if (status === 'excellent') return `Technical SEO is excellently configured`;
+          if (status === 'good') return `Good technical foundation with room for improvement`;
+          if (status === 'needs-work') return `Technical SEO needs attention for better performance`;
+          return `Critical technical SEO issues need immediate attention`;
+          
+        case 'content':
+          if (status === 'excellent') return `Content is well-optimized for search engines`;
+          if (status === 'good') return `Content optimization is on track with minor tweaks needed`;
+          if (status === 'needs-work') return `Content needs optimization for better search visibility`;
+          return `Content requires significant SEO improvements`;
+          
+        default:
+          return `${percentage}% optimized`;
+      }
+    };
 
     const metaPercentage = Math.round((metaTagsScore / maxMetaTags) * 100);
     const socialPercentage = Math.round((socialTagsScore / maxSocialTags) * 100);
@@ -150,7 +261,33 @@ export class SEOAnalyzer {
       overall,
       metaTags: metaTagsScore,
       socialTags: socialTagsScore,
-      performance: 'Fast'
+      performance: 'Fast',
+      categories: {
+        basicSEO: {
+          score: basicSEOScore,
+          maxScore: maxBasicSEO,
+          status: getStatus(basicSEOScore, maxBasicSEO),
+          summary: getSummary('basic', basicSEOScore, maxBasicSEO)
+        },
+        socialSEO: {
+          score: socialSEOScore,
+          maxScore: maxSocialSEO,
+          status: getStatus(socialSEOScore, maxSocialSEO),
+          summary: getSummary('social', socialSEOScore, maxSocialSEO)
+        },
+        technicalSEO: {
+          score: technicalSEOScore,
+          maxScore: maxTechnicalSEO,
+          status: getStatus(technicalSEOScore, maxTechnicalSEO),
+          summary: getSummary('technical', technicalSEOScore, maxTechnicalSEO)
+        },
+        contentOptimization: {
+          score: contentOptScore,
+          maxScore: maxContentOpt,
+          status: getStatus(contentOptScore, maxContentOpt),
+          summary: getSummary('content', contentOptScore, maxContentOpt)
+        }
+      }
     };
   }
 
