@@ -1,7 +1,14 @@
 import { MetaTags } from "@shared/schema";
+import { useState, useEffect } from "react";
 
 interface SocialMediaPreviewsProps {
   metaTags: MetaTags;
+}
+
+interface ImageState {
+  src: string;
+  loading: boolean;
+  error: boolean;
 }
 
 export default function SocialMediaPreviews({ metaTags }: SocialMediaPreviewsProps) {
@@ -16,8 +23,89 @@ export default function SocialMediaPreviews({ metaTags }: SocialMediaPreviewsPro
   
   const linkedinTitle = metaTags.ogTitle || metaTags.title || 'No title found';
 
+  const [ogImageState, setOgImageState] = useState<ImageState>({
+    src: metaTags.ogImage || '',
+    loading: !!metaTags.ogImage,
+    error: false
+  });
+
+  const [twitterImageState, setTwitterImageState] = useState<ImageState>({
+    src: metaTags.twitterImage || metaTags.ogImage || '',
+    loading: !!(metaTags.twitterImage || metaTags.ogImage),
+    error: false
+  });
+
+  // Update image states when metaTags change
+  useEffect(() => {
+    setOgImageState({
+      src: metaTags.ogImage || '',
+      loading: !!metaTags.ogImage,
+      error: false
+    });
+    
+    setTwitterImageState({
+      src: metaTags.twitterImage || metaTags.ogImage || '',
+      loading: !!(metaTags.twitterImage || metaTags.ogImage),
+      error: false
+    });
+  }, [metaTags.ogImage, metaTags.twitterImage]);
+
   const truncateText = (text: string, maxLength: number) => {
     return text.length > maxLength ? text.substring(0, maxLength - 3) + '...' : text;
+  };
+
+  const handleImageLoad = (imageType: 'og' | 'twitter') => {
+    if (imageType === 'og') {
+      setOgImageState(prev => ({ ...prev, loading: false, error: false }));
+    } else {
+      setTwitterImageState(prev => ({ ...prev, loading: false, error: false }));
+    }
+  };
+
+  const handleImageError = (imageType: 'og' | 'twitter') => {
+    if (imageType === 'og') {
+      setOgImageState(prev => ({ ...prev, loading: false, error: true }));
+    } else {
+      setTwitterImageState(prev => ({ ...prev, loading: false, error: true }));
+    }
+  };
+
+  const renderImage = (imageState: ImageState, imageType: 'og' | 'twitter', fallbackText: string) => {
+    if (!imageState.src) {
+      return (
+        <div className="w-full h-24 sm:h-32 bg-gray-100 flex items-center justify-center">
+          <span className="text-slate-400 text-xs sm:text-sm px-2 text-center">{fallbackText}</span>
+        </div>
+      );
+    }
+
+    if (imageState.loading) {
+      return (
+        <div className="w-full h-24 sm:h-32 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center animate-pulse">
+          <span className="text-slate-500 text-xs sm:text-sm px-2 text-center">Loading image...</span>
+        </div>
+      );
+    }
+
+    if (imageState.error) {
+      return (
+        <div className="w-full h-24 sm:h-32 bg-gradient-to-br from-red-50 to-orange-100 flex items-center justify-center">
+          <span className="text-slate-500 text-xs sm:text-sm px-2 text-center">Image failed to load</span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full h-24 sm:h-32 overflow-hidden bg-gray-100">
+        <img
+          src={imageState.src}
+          alt="Social media preview"
+          className="w-full h-full object-cover"
+          onLoad={() => handleImageLoad(imageType)}
+          onError={() => handleImageError(imageType)}
+        />
+      </div>
+    );
   };
 
   return (
@@ -40,15 +128,7 @@ export default function SocialMediaPreviews({ metaTags }: SocialMediaPreviewsPro
             <span className="font-medium text-slate-900 text-sm sm:text-base">Facebook</span>
           </div>
           <div className="border border-slate-200 rounded-lg overflow-hidden">
-            {metaTags.ogImage ? (
-              <div className="w-full h-24 sm:h-32 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-                <span className="text-slate-500 text-xs sm:text-sm px-2 text-center">Image: {truncateText(metaTags.ogImage, 50)}</span>
-              </div>
-            ) : (
-              <div className="w-full h-24 sm:h-32 bg-gray-100 flex items-center justify-center">
-                <span className="text-slate-400 text-xs sm:text-sm px-2 text-center">No Open Graph image found</span>
-              </div>
-            )}
+            {renderImage(ogImageState, 'og', 'No Open Graph image found')}
             <div className="p-3 bg-gray-50">
               <p className="text-xs text-gray-500 uppercase mb-1 truncate">{cleanDomain}</p>
               <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-1">{truncateText(fbTitle, 60)}</h4>
@@ -66,15 +146,7 @@ export default function SocialMediaPreviews({ metaTags }: SocialMediaPreviewsPro
             <span className="font-medium text-slate-900 text-sm sm:text-base">Twitter</span>
           </div>
           <div className="border border-slate-200 rounded-lg overflow-hidden">
-            {metaTags.twitterImage || metaTags.ogImage ? (
-              <div className="w-full h-24 sm:h-32 bg-gradient-to-br from-blue-50 to-sky-100 flex items-center justify-center">
-                <span className="text-slate-500 text-xs sm:text-sm px-2 text-center">Image: {truncateText(metaTags.twitterImage || metaTags.ogImage || '', 50)}</span>
-              </div>
-            ) : (
-              <div className="w-full h-24 sm:h-32 bg-gray-100 flex items-center justify-center">
-                <span className="text-slate-400 text-xs sm:text-sm px-2 text-center">No Twitter image found</span>
-              </div>
-            )}
+            {renderImage(twitterImageState, 'twitter', 'No Twitter image found')}
             <div className="p-3">
               <p className="text-xs text-gray-500 mb-1 truncate">{cleanDomain}</p>
               <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-1">{truncateText(twitterTitle, 60)}</h4>
@@ -92,15 +164,7 @@ export default function SocialMediaPreviews({ metaTags }: SocialMediaPreviewsPro
             <span className="font-medium text-slate-900 text-sm sm:text-base">LinkedIn</span>
           </div>
           <div className="border border-slate-200 rounded-lg overflow-hidden">
-            {metaTags.ogImage ? (
-              <div className="w-full h-24 sm:h-32 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-                <span className="text-slate-500 text-xs sm:text-sm px-2 text-center">Image: {truncateText(metaTags.ogImage, 50)}</span>
-              </div>
-            ) : (
-              <div className="w-full h-24 sm:h-32 bg-gray-100 flex items-center justify-center">
-                <span className="text-slate-400 text-xs sm:text-sm px-2 text-center">No LinkedIn preview image found</span>
-              </div>
-            )}
+            {renderImage(ogImageState, 'og', 'No LinkedIn preview image found')}
             <div className="p-3">
               <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-1">{truncateText(linkedinTitle, 60)}</h4>
               <p className="text-xs text-gray-500 truncate">{cleanDomain}</p>
